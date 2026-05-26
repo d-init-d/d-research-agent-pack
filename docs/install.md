@@ -2,7 +2,7 @@
 
 ## Prerequisite
 
-Install the actual `d-research` skill separately. This agent pack only contains OpenCode agent configuration and MiniMax-derived orchestration prompts.
+Install the actual [`d-research` skill](https://github.com/d-init-d/d-research-skill) separately. This agent pack only contains OpenCode agent configuration and MiniMax-derived orchestration prompts.
 
 OpenCode skill discovery locations include:
 

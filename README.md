@@ -2,7 +2,7 @@
 
 OpenCode agent pack generated from the MiniMax **D Research** expert backup. It turns the MiniMax-style expert and subagent layout into project-local OpenCode agents.
 
-This repo does **not** vendor the full `d-research` skill. It expects the `d-research` skill to be installed in OpenCode already.
+This repo does **not** vendor the full [`d-research` skill](https://github.com/d-init-d/d-research-skill). It expects the [`d-research` skill](https://github.com/d-init-d/d-research-skill) to be installed in OpenCode already.
 
 ## What This Provides
 
@@ -27,10 +27,11 @@ This repo does **not** vendor the full `d-research` skill. It expects the `d-res
 
 ## Install
 
-1. Install the `d-research` skill into one OpenCode skill location, for example:
+1. Install the [`d-research` skill](https://github.com/d-init-d/d-research-skill) into one OpenCode skill location, for example:
 
    ```powershell
-   # Example target path; install/copy the actual d-research skill here.
+   # Example target path; install/copy the actual d-research skill from:
+   # https://github.com/d-init-d/d-research-skill
    mkdir "$env:USERPROFILE\.config\opencode\skills\d-research" -Force
    ```
 
@@ -86,7 +87,7 @@ This is close to a MiniMax expert/subagent setup, but OpenCode users can still e
 ## Source And Attribution
 
 - Agent prompts are derived from the user's MiniMax D Research expert backup.
-- The workflow expects the `d-research` skill from `d-init-d/d-research-skill`.
+- The workflow expects the [`d-research` skill](https://github.com/d-init-d/d-research-skill) from [`d-init-d/d-research-skill`](https://github.com/d-init-d/d-research-skill).
 - Preserve the original skill license and attribution when distributing the skill itself.
 
 ## OpenCode References
