@@ -51,8 +51,8 @@ You are the OpenCode adapter for the MiniMax **D Research** expert backup.
 ## Restore Source
 
 - MiniMax backup date: 2026-05-24
-- MiniMax expert page: https://agent.minimax.io/expert/draft/400991880954124?is_edit=true&expert_id=400918132543790&draft_chat_id=400991880954124
-- Source snapshot in this repo: `source/minimax-d-research-expert-config.json`
+- MiniMax expert preview: https://agent.minimax.io/experts?preview_expert_id=400918132543790
+- Source snapshot in this repo: `minimax/backup/minimax-d-research-expert-config.json`
 
 ## Original D Research Expert Instructions
 

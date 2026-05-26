@@ -2,7 +2,7 @@
 
 ## Prerequisite
 
-Install the actual [`d-research-skill`](https://github.com/d-init-d/d-research-skill) separately. This agent pack only contains OpenCode agent configuration and MiniMax-derived orchestration prompts.
+Install the actual [`d-research-skill`](https://github.com/d-init-d/d-research-skill) separately. This adapter only contains OpenCode agent configuration and MiniMax-derived orchestration prompts.
 
 OpenCode skill discovery locations include:
 
@@ -13,10 +13,10 @@ OpenCode skill discovery locations include:
 
 ## Project-Local Install
 
-Copy the agents into your project:
+From the root of this repository, copy the agents into your project:
 
 ```powershell
-Copy-Item -Recurse ".opencode\agents" "D:\path\to\your-project\.opencode\"
+Copy-Item -Recurse "opencode\.opencode\agents" "D:\path\to\your-project\.opencode\"
 ```
 
 Project-local install is best when you want this research stack to apply only to one repository.
@@ -25,7 +25,7 @@ Project-local install is best when you want this research stack to apply only to
 
 ```powershell
 mkdir "$env:USERPROFILE\.config\opencode\agents" -Force
-Copy-Item ".opencode\agents\*.md" "$env:USERPROFILE\.config\opencode\agents\" -Force
+Copy-Item "opencode\.opencode\agents\*.md" "$env:USERPROFILE\.config\opencode\agents\" -Force
 ```
 
 Global install is best when you want `@d-research` available everywhere.

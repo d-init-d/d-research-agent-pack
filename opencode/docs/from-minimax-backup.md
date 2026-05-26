@@ -1,12 +1,16 @@
 # From MiniMax Backup
 
-This pack was generated from the sanitized MiniMax D Research backup snapshot stored in this repo:
+This adapter was generated from the sanitized MiniMax D Research backup snapshot stored in this repo:
 
 ```text
-source/minimax-d-research-expert-config.json
+minimax/backup/minimax-d-research-expert-config.json
 ```
 
-Generation input on the maintainer machine was the MiniMax expert backup folder created on 2026-05-24.
+The live MiniMax expert reference is:
+
+```text
+https://agent.minimax.io/experts?preview_expert_id=400918132543790
+```
 
 ## Mapping
 
@@ -22,7 +26,7 @@ Generation input on the maintainer machine was the MiniMax expert backup folder 
 
 ## Conversion Rules
 
-- Main expert instructions become the body of `.opencode/agents/d-research.md`.
+- Main expert instructions become the body of `opencode/.opencode/agents/d-research.md`.
 - Each MiniMax subagent prompt becomes one hidden OpenCode subagent.
 - MiniMax subagent attachment becomes OpenCode `permission.task` allowlisting.
 - MiniMax skill dependency becomes OpenCode `permission.skill` allowlisting.

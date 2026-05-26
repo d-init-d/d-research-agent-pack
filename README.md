@@ -1,97 +1,85 @@
-# D Research Agent For OpenCode
+# D Research Agent Pack
 
-OpenCode agent pack generated from the MiniMax **D Research** expert backup. It turns the MiniMax-style expert and subagent layout into project-local OpenCode agents.
+Ready-to-use agent presets and subagent orchestration configs built on top of [`d-research-skill`](https://github.com/d-init-d/d-research-skill).
 
-This repo does **not** vendor the full [`d-research-skill`](https://github.com/d-init-d/d-research-skill). It expects [`d-research-skill`](https://github.com/d-init-d/d-research-skill) to be installed in OpenCode already.
+This repository is the **agent adapter layer** for D Research. It does not vendor the full skill. Install [`d-research-skill`](https://github.com/d-init-d/d-research-skill) separately, then choose the adapter for your agent platform.
 
-## What This Provides
+## Purpose
 
-- A primary OpenCode agent: `d-research`
-- Six hidden OpenCode subagents mapped from the MiniMax expert backup
-- Strict `permission.task` allowlist so the main agent only sees the D Research workers
-- `permission.skill` allowlist so the agents only load `d-research`
-- Read-only-by-default research permissions
-- Installation and adaptation notes
+`d-research-skill` provides the research workflow. This repo provides platform-specific agent wrappers that make the workflow easier to use consistently:
 
-## Agent Map
+- fixed role prompts
+- subagent routing
+- source-recall checklists
+- evidence verification gates
+- read-only research defaults
+- restorable config snapshots
 
-| OpenCode agent id | Original role | Purpose |
-| --- | --- | --- |
-| `d-research` | D Research Expert | Main orchestrator and final synthesizer |
-| `d-research-source-mapper` | Source Mapper | Maximizes audit-grade source recall with search matrices, source-basin coverage, archive/mirror hunting, candidate URLs, blockers, and next-query gaps. |
-| `d-research-recall-auditor` | Recall Auditor | Runs an adversarial second-pass recall audit to find sources missed by Source Mapper using alternate queries, archives, mirrors, exact phrases, and same-name checks. |
-| `d-research-social-public-source-hunter` | Social Public Source Hunter | Finds lawful public social/community sources across public posts, pages, profiles, videos, forums, and school/community channels with strict identity and privacy labeling. |
-| `d-research-evidence-verifier` | Evidence Verifier | Verifies claims with exact URLs, primary sources, contradiction checks, staleness checks, confidence, and evidence-ledger rows. |
-| `d-research-data-extractor` | Data Extractor | Extracts audit-grade structured data from public pages, files, APIs, tables, embedded JSON, and text; validates coverage and reports blockers. |
-| `d-research-report-synthesizer` | Report Synthesizer | Synthesizes verified findings into source-backed reports with exact URLs, research trail, blockers, caveats, confidence, and gaps. |
+The goal is to make a MiniMax-style D Research expert available across multiple agent runtimes.
 
-## Install
+## Adapter Status
 
-1. Install [`d-research-skill`](https://github.com/d-init-d/d-research-skill) into one OpenCode skill location, for example:
+| Platform | Status | Path | Notes |
+| --- | --- | --- | --- |
+| MiniMax Agent | Live reference | [`minimax/`](minimax/) | Public expert preview and source backup snapshot |
+| OpenCode | Ready | [`opencode/`](opencode/) | Primary agent plus six hidden subagents |
+| Claude Code | Planned | [`claude-code/`](claude-code/) | Placeholder for a future adapter |
 
-   ```powershell
-   # Example target path; install/copy the actual d-research skill from:
-   # https://github.com/d-init-d/d-research-skill
-   mkdir "$env:USERPROFILE\.config\opencode\skills\d-research" -Force
-   ```
+## Live MiniMax Reference
 
-   OpenCode discovers skills from locations such as:
+The current MiniMax D Research expert is available here:
 
-   - `.opencode/skills/<name>/SKILL.md`
-   - `~/.config/opencode/skills/<name>/SKILL.md`
-   - `.agents/skills/<name>/SKILL.md`
-   - `~/.agents/skills/<name>/SKILL.md`
+[`D Research` on MiniMax Agent](https://agent.minimax.io/experts?preview_expert_id=400918132543790)
 
-2. Copy this repo's agents into your project or global OpenCode config:
+The MiniMax configuration snapshot used to generate the first OpenCode adapter is stored at:
 
-   Project-local:
+[`minimax/backup/minimax-d-research-expert-config.json`](minimax/backup/minimax-d-research-expert-config.json)
 
-   ```powershell
-   Copy-Item -Recurse ".opencode\agents" "D:\path\to\your-project\.opencode\"
-   ```
+## Current OpenCode Pack
 
-   Global:
+The OpenCode adapter provides:
 
-   ```powershell
-   mkdir "$env:USERPROFILE\.config\opencode\agents" -Force
-   Copy-Item ".opencode\agents\*.md" "$env:USERPROFILE\.config\opencode\agents\" -Force
-   ```
+- `d-research` primary agent
+- `d-research-source-mapper`
+- `d-research-recall-auditor`
+- `d-research-social-public-source-hunter`
+- `d-research-evidence-verifier`
+- `d-research-data-extractor`
+- `d-research-report-synthesizer`
 
-3. Restart OpenCode or open a new session, then select or mention:
+See [`opencode/README.md`](opencode/README.md) for installation and behavior details.
 
-   ```text
-   @d-research
-   ```
+## Repository Layout
 
-## How The Locking Works
+```text
+d-research-agent-pack/
+  README.md
+  minimax/
+    README.md
+    backup/
+      minimax-d-research-expert-config.json
+  opencode/
+    README.md
+    .opencode/
+      agents/
+    docs/
+    examples/
+  claude-code/
+    README.md
+  scripts/
+    generate-opencode-from-minimax-backup.mjs
+```
 
-- `hidden: true` keeps worker subagents out of normal autocomplete noise.
-- `permission.task` on `d-research` denies every subagent first, then allows only the D Research workers.
-- `permission.task` on each worker denies all nested delegation, so workers return findings instead of spawning more workers.
-- `permission.skill` denies all skills first, then allows only `d-research`.
-- `edit: deny` keeps the research workflow read-only by default.
-- `bash: ask` allows parsing and deterministic extraction only after user approval.
+## Design Principles
 
-This is close to a MiniMax expert/subagent setup, but OpenCode users can still edit local config files or directly invoke subagents if they know the agent id.
+- Keep [`d-research-skill`](https://github.com/d-init-d/d-research-skill) as the source of truth for the research workflow.
+- Keep platform adapters thin, auditable, and easy to copy into a local config.
+- Preserve read-only, lawful public-data boundaries.
+- Prefer exact URLs, evidence ledgers, blocker reports, and confidence labels.
+- Treat subagents as scoped workers; the main agent owns final synthesis.
 
-## Files
+## Attribution
 
-- `.opencode/agents/d-research.md`: primary orchestrator
-- `.opencode/agents/d-research-*.md`: hidden workers
-- `examples/opencode.json`: equivalent JSON-style config example
-- `docs/install.md`: install notes
-- `docs/permissions.md`: permission rationale
-- `docs/from-minimax-backup.md`: mapping from the MiniMax expert backup
-- `source/minimax-d-research-expert-config.json`: sanitized source backup snapshot
-
-## Source And Attribution
-
-- Agent prompts are derived from the user's MiniMax D Research expert backup.
-- The workflow expects [`d-research-skill`](https://github.com/d-init-d/d-research-skill) from [`d-init-d/d-research-skill`](https://github.com/d-init-d/d-research-skill).
-- Preserve the original skill license and attribution when distributing the skill itself.
-
-## OpenCode References
-
-- Agents: https://dev.opencode.ai/docs/agents/
-- Agent skills: https://dev.opencode.ai/docs/skills/
-- Permissions: https://dev.opencode.ai/docs/permissions/
+- Skill dependency: [`d-init-d/d-research-skill`](https://github.com/d-init-d/d-research-skill)
+- MiniMax expert reference: [`D Research`](https://agent.minimax.io/experts?preview_expert_id=400918132543790)
+- OpenCode adapter prompts are derived from the D Research MiniMax expert backup stored in this repository.

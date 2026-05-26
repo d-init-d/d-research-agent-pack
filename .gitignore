@@ -1,6 +1,8 @@
 # Local OpenCode/session artifacts
-.opencode/sessions/
-.opencode/cache/
+**/.opencode/sessions/
+**/.opencode/cache/
+**/.opencode/logs/
+**/.opencode/.gitignore
 
 # OS/editor noise
 .DS_Store

@@ -1,9 +1,17 @@
 import fs from "node:fs";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 
-const DEFAULT_SOURCE =
-  "D:/Downloads/skills-experts-for-minimax-agent/d-research-expert-backup-2026-05-24/expert-config.json";
-const DEFAULT_OUT = "D:/Downloads/d-research-agent-for-opencode";
+const scriptDir = path.dirname(fileURLToPath(import.meta.url));
+const repoRoot = path.resolve(scriptDir, "..");
+
+const DEFAULT_SOURCE = path.join(
+  repoRoot,
+  "minimax",
+  "backup",
+  "minimax-d-research-expert-config.json",
+);
+const DEFAULT_OUT = path.join(repoRoot, "opencode");
 
 const args = Object.fromEntries(
   process.argv.slice(2).map((arg) => {
@@ -20,7 +28,9 @@ if (raw.expert?.name !== "D Research") {
   throw new Error(`Expected D Research backup, got: ${raw.expert?.name || "unknown"}`);
 }
 
-const agentId = "d-research";
+const minimaxPreviewUrl = "https://agent.minimax.io/experts?preview_expert_id=400918132543790";
+const skillUrl = "https://github.com/d-init-d/d-research-skill";
+
 const roleIds = new Map([
   ["Source Mapper", "d-research-source-mapper"],
   ["Recall Auditor", "d-research-recall-auditor"],
@@ -44,8 +54,15 @@ const write = (file, content) => {
 
 const yamlBlock = (lines) => `---\n${lines.join("\n")}\n---`;
 
+function escapeYaml(value) {
+  return String(value ?? "")
+    .replace(/\\/g, "\\\\")
+    .replace(/"/g, '\\"')
+    .replace(/\r?\n/g, " ");
+}
+
 const mainFrontmatter = yamlBlock([
-  `description: "Audit-grade web research orchestrator using the installed d-research skill and fixed OpenCode subagents."`,
+  'description: "Audit-grade web research orchestrator using the installed d-research skill and fixed OpenCode subagents."',
   "mode: primary",
   "temperature: 0.1",
   "permission:",
@@ -91,13 +108,6 @@ const workerFrontmatter = (subagent) =>
     "color: secondary",
   ]);
 
-function escapeYaml(value) {
-  return String(value ?? "")
-    .replace(/\\/g, "\\\\")
-    .replace(/"/g, '\\"')
-    .replace(/\r?\n/g, " ");
-}
-
 function mainAgentMarkdown() {
   const subagentList = orderedSubagents
     .map((subagent) => `- \`${subagent.id}\`: ${subagent.name}`)
@@ -125,8 +135,8 @@ ${subagentList}
 ## Restore Source
 
 - MiniMax backup date: ${raw.backupDate}
-- MiniMax expert page: ${raw.expert.pageUrl}
-- Source snapshot in this repo: \`source/minimax-d-research-expert-config.json\`
+- MiniMax expert preview: ${minimaxPreviewUrl}
+- Source snapshot in this repo: \`minimax/backup/minimax-d-research-expert-config.json\`
 
 ## Original D Research Expert Instructions
 
@@ -153,16 +163,16 @@ You are the OpenCode subagent \`${subagent.id}\` for the D Research agent.
 ${subagent.systemPrompt}`;
 }
 
-function readme() {
+function opencodeReadme() {
   const subagentRows = orderedSubagents
     .map((subagent) => `| \`${subagent.id}\` | ${subagent.name} | ${subagent.description} |`)
     .join("\n");
 
-  return `# D Research Agent For OpenCode
+  return `# D Research Adapter For OpenCode
 
-OpenCode agent pack generated from the MiniMax **D Research** expert backup. It turns the MiniMax-style expert and subagent layout into project-local OpenCode agents.
+OpenCode agent adapter generated from the MiniMax **D Research** expert backup. It turns the MiniMax-style expert and subagent layout into project-local or global OpenCode agents.
 
-This repo does **not** vendor the full [\`d-research-skill\`](https://github.com/d-init-d/d-research-skill). It expects [\`d-research-skill\`](https://github.com/d-init-d/d-research-skill) to be installed in OpenCode already.
+This adapter does **not** vendor the full [\`d-research-skill\`](${skillUrl}). It expects [\`d-research-skill\`](${skillUrl}) to be installed in OpenCode already.
 
 ## What This Provides
 
@@ -182,11 +192,11 @@ ${subagentRows}
 
 ## Install
 
-1. Install [\`d-research-skill\`](https://github.com/d-init-d/d-research-skill) into one OpenCode skill location, for example:
+1. Install [\`d-research-skill\`](${skillUrl}) into one OpenCode skill location, for example:
 
    \`\`\`powershell
    # Example target path; install/copy the actual d-research skill from:
-   # https://github.com/d-init-d/d-research-skill
+   # ${skillUrl}
    mkdir "$env:USERPROFILE\\.config\\opencode\\skills\\d-research" -Force
    \`\`\`
 
@@ -197,19 +207,19 @@ ${subagentRows}
    - \`.agents/skills/<name>/SKILL.md\`
    - \`~/.agents/skills/<name>/SKILL.md\`
 
-2. Copy this repo's agents into your project or global OpenCode config:
+2. Copy this adapter's agents into your project or global OpenCode config.
 
    Project-local:
 
    \`\`\`powershell
-   Copy-Item -Recurse ".opencode\\agents" "D:\\path\\to\\your-project\\.opencode\\"
+   Copy-Item -Recurse "opencode\\.opencode\\agents" "D:\\path\\to\\your-project\\.opencode\\"
    \`\`\`
 
    Global:
 
    \`\`\`powershell
    mkdir "$env:USERPROFILE\\.config\\opencode\\agents" -Force
-   Copy-Item ".opencode\\agents\\*.md" "$env:USERPROFILE\\.config\\opencode\\agents\\" -Force
+   Copy-Item "opencode\\.opencode\\agents\\*.md" "$env:USERPROFILE\\.config\\opencode\\agents\\" -Force
    \`\`\`
 
 3. Restart OpenCode or open a new session, then select or mention:
@@ -237,12 +247,12 @@ This is close to a MiniMax expert/subagent setup, but OpenCode users can still e
 - \`docs/install.md\`: install notes
 - \`docs/permissions.md\`: permission rationale
 - \`docs/from-minimax-backup.md\`: mapping from the MiniMax expert backup
-- \`source/minimax-d-research-expert-config.json\`: sanitized source backup snapshot
 
 ## Source And Attribution
 
-- Agent prompts are derived from the user's MiniMax D Research expert backup.
-- The workflow expects [\`d-research-skill\`](https://github.com/d-init-d/d-research-skill) from [\`d-init-d/d-research-skill\`](https://github.com/d-init-d/d-research-skill).
+- Agent prompts are derived from the D Research MiniMax expert backup.
+- The workflow expects [\`d-research-skill\`](${skillUrl}) from [\`d-init-d/d-research-skill\`](${skillUrl}).
+- MiniMax reference expert: [\`D Research\`](${minimaxPreviewUrl})
 - Preserve the original skill license and attribution when distributing the skill itself.
 
 ## OpenCode References
@@ -258,7 +268,7 @@ function installDoc() {
 
 ## Prerequisite
 
-Install the actual [\`d-research-skill\`](https://github.com/d-init-d/d-research-skill) separately. This agent pack only contains OpenCode agent configuration and MiniMax-derived orchestration prompts.
+Install the actual [\`d-research-skill\`](${skillUrl}) separately. This adapter only contains OpenCode agent configuration and MiniMax-derived orchestration prompts.
 
 OpenCode skill discovery locations include:
 
@@ -269,10 +279,10 @@ OpenCode skill discovery locations include:
 
 ## Project-Local Install
 
-Copy the agents into your project:
+From the root of this repository, copy the agents into your project:
 
 \`\`\`powershell
-Copy-Item -Recurse ".opencode\\agents" "D:\\path\\to\\your-project\\.opencode\\"
+Copy-Item -Recurse "opencode\\.opencode\\agents" "D:\\path\\to\\your-project\\.opencode\\"
 \`\`\`
 
 Project-local install is best when you want this research stack to apply only to one repository.
@@ -281,7 +291,7 @@ Project-local install is best when you want this research stack to apply only to
 
 \`\`\`powershell
 mkdir "$env:USERPROFILE\\.config\\opencode\\agents" -Force
-Copy-Item ".opencode\\agents\\*.md" "$env:USERPROFILE\\.config\\opencode\\agents\\" -Force
+Copy-Item "opencode\\.opencode\\agents\\*.md" "$env:USERPROFILE\\.config\\opencode\\agents\\" -Force
 \`\`\`
 
 Global install is best when you want \`@d-research\` available everywhere.
@@ -339,13 +349,17 @@ OpenCode config is local and editable by the user. \`permission.task\` controls 
 function minimaxDoc() {
   return `# From MiniMax Backup
 
-This pack was generated from the sanitized MiniMax D Research backup snapshot stored in this repo:
+This adapter was generated from the sanitized MiniMax D Research backup snapshot stored in this repo:
 
 \`\`\`text
-source/minimax-d-research-expert-config.json
+minimax/backup/minimax-d-research-expert-config.json
 \`\`\`
 
-Generation input on the maintainer machine was the MiniMax expert backup folder created on ${raw.backupDate}.
+The live MiniMax expert reference is:
+
+\`\`\`text
+${minimaxPreviewUrl}
+\`\`\`
 
 ## Mapping
 
@@ -356,7 +370,7 @@ ${orderedSubagents.map((subagent) => `| ${subagent.name} | \`${subagent.id}\` |`
 
 ## Conversion Rules
 
-- Main expert instructions become the body of \`.opencode/agents/d-research.md\`.
+- Main expert instructions become the body of \`opencode/.opencode/agents/d-research.md\`.
 - Each MiniMax subagent prompt becomes one hidden OpenCode subagent.
 - MiniMax subagent attachment becomes OpenCode \`permission.task\` allowlisting.
 - MiniMax skill dependency becomes OpenCode \`permission.skill\` allowlisting.
@@ -369,6 +383,7 @@ function exampleConfig() {
     ["*", "deny"],
     ...orderedSubagents.map((subagent) => [subagent.id, "allow"]),
   ]);
+
   const agents = {
     "d-research": {
       description:
@@ -436,23 +451,11 @@ for (const subagent of orderedSubagents) {
   write(path.join(outDir, `.opencode/agents/${subagent.id}.md`), subagentMarkdown(subagent));
 }
 
-write(path.join(outDir, "README.md"), readme());
+write(path.join(outDir, "README.md"), opencodeReadme());
 write(path.join(outDir, "docs/install.md"), installDoc());
 write(path.join(outDir, "docs/permissions.md"), permissionsDoc());
 write(path.join(outDir, "docs/from-minimax-backup.md"), minimaxDoc());
 write(path.join(outDir, "examples/opencode.json"), exampleConfig());
-write(path.join(outDir, "source/minimax-d-research-expert-config.json"), JSON.stringify(raw, null, 2));
-write(
-  path.join(outDir, ".gitignore"),
-  `# Local OpenCode/session artifacts
-.opencode/sessions/
-.opencode/cache/
-
-# OS/editor noise
-.DS_Store
-Thumbs.db
-`,
-);
 
 console.log(
   JSON.stringify(
