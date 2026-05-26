@@ -1,0 +1,178 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "agent": {
+    "d-research": {
+      "description": "Audit-grade web research orchestrator using the installed d-research skill and fixed OpenCode subagents.",
+      "mode": "primary",
+      "temperature": 0.1,
+      "permission": {
+        "read": "allow",
+        "list": "allow",
+        "glob": "allow",
+        "grep": "allow",
+        "webfetch": "allow",
+        "websearch": "allow",
+        "skill": {
+          "*": "deny",
+          "d-research": "allow"
+        },
+        "task": {
+          "*": "deny",
+          "d-research-source-mapper": "allow",
+          "d-research-recall-auditor": "allow",
+          "d-research-social-public-source-hunter": "allow",
+          "d-research-evidence-verifier": "allow",
+          "d-research-data-extractor": "allow",
+          "d-research-report-synthesizer": "allow"
+        },
+        "edit": "deny",
+        "bash": "ask",
+        "external_directory": "ask"
+      }
+    },
+    "d-research-source-mapper": {
+      "description": "Maximizes audit-grade source recall with search matrices, source-basin coverage, archive/mirror hunting, candidate URLs, blockers, and next-query gaps.",
+      "mode": "subagent",
+      "hidden": true,
+      "temperature": 0.1,
+      "permission": {
+        "read": "allow",
+        "list": "allow",
+        "glob": "allow",
+        "grep": "allow",
+        "webfetch": "allow",
+        "websearch": "allow",
+        "skill": {
+          "*": "deny",
+          "d-research": "allow"
+        },
+        "task": {
+          "*": "deny"
+        },
+        "edit": "deny",
+        "bash": "ask",
+        "external_directory": "ask"
+      }
+    },
+    "d-research-recall-auditor": {
+      "description": "Runs an adversarial second-pass recall audit to find sources missed by Source Mapper using alternate queries, archives, mirrors, exact phrases, and same-name checks.",
+      "mode": "subagent",
+      "hidden": true,
+      "temperature": 0.1,
+      "permission": {
+        "read": "allow",
+        "list": "allow",
+        "glob": "allow",
+        "grep": "allow",
+        "webfetch": "allow",
+        "websearch": "allow",
+        "skill": {
+          "*": "deny",
+          "d-research": "allow"
+        },
+        "task": {
+          "*": "deny"
+        },
+        "edit": "deny",
+        "bash": "ask",
+        "external_directory": "ask"
+      }
+    },
+    "d-research-social-public-source-hunter": {
+      "description": "Finds lawful public social/community sources across public posts, pages, profiles, videos, forums, and school/community channels with strict identity and privacy labeling.",
+      "mode": "subagent",
+      "hidden": true,
+      "temperature": 0.1,
+      "permission": {
+        "read": "allow",
+        "list": "allow",
+        "glob": "allow",
+        "grep": "allow",
+        "webfetch": "allow",
+        "websearch": "allow",
+        "skill": {
+          "*": "deny",
+          "d-research": "allow"
+        },
+        "task": {
+          "*": "deny"
+        },
+        "edit": "deny",
+        "bash": "ask",
+        "external_directory": "ask"
+      }
+    },
+    "d-research-evidence-verifier": {
+      "description": "Verifies claims with exact URLs, primary sources, contradiction checks, staleness checks, confidence, and evidence-ledger rows.",
+      "mode": "subagent",
+      "hidden": true,
+      "temperature": 0.1,
+      "permission": {
+        "read": "allow",
+        "list": "allow",
+        "glob": "allow",
+        "grep": "allow",
+        "webfetch": "allow",
+        "websearch": "allow",
+        "skill": {
+          "*": "deny",
+          "d-research": "allow"
+        },
+        "task": {
+          "*": "deny"
+        },
+        "edit": "deny",
+        "bash": "ask",
+        "external_directory": "ask"
+      }
+    },
+    "d-research-data-extractor": {
+      "description": "Extracts audit-grade structured data from public pages, files, APIs, tables, embedded JSON, and text; validates coverage and reports blockers.",
+      "mode": "subagent",
+      "hidden": true,
+      "temperature": 0.1,
+      "permission": {
+        "read": "allow",
+        "list": "allow",
+        "glob": "allow",
+        "grep": "allow",
+        "webfetch": "allow",
+        "websearch": "allow",
+        "skill": {
+          "*": "deny",
+          "d-research": "allow"
+        },
+        "task": {
+          "*": "deny"
+        },
+        "edit": "deny",
+        "bash": "ask",
+        "external_directory": "ask"
+      }
+    },
+    "d-research-report-synthesizer": {
+      "description": "Synthesizes verified findings into source-backed reports with exact URLs, research trail, blockers, caveats, confidence, and gaps.",
+      "mode": "subagent",
+      "hidden": true,
+      "temperature": 0.1,
+      "permission": {
+        "read": "allow",
+        "list": "allow",
+        "glob": "allow",
+        "grep": "allow",
+        "webfetch": "allow",
+        "websearch": "allow",
+        "skill": {
+          "*": "deny",
+          "d-research": "allow"
+        },
+        "task": {
+          "*": "deny"
+        },
+        "edit": "deny",
+        "bash": "ask",
+        "external_directory": "ask"
+      }
+    }
+  }
+}

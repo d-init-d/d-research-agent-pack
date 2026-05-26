@@ -1,0 +1,7 @@
+# Local OpenCode/session artifacts
+.opencode/sessions/
+.opencode/cache/
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
