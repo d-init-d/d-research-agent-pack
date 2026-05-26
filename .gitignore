@@ -4,6 +4,11 @@
 **/.opencode/logs/
 **/.opencode/.gitignore
 
+# Private source configs used to regenerate adapters
+private/
+minimax/backup/
+*minimax*expert-config*.json
+
 # OS/editor noise
 .DS_Store
 Thumbs.db

@@ -1,13 +1,13 @@
 # D Research Adapter For OpenCode
 
-OpenCode agent adapter generated from the MiniMax **D Research** expert backup. It turns the MiniMax-style expert and subagent layout into project-local or global OpenCode agents.
+OpenCode agent adapter derived from the MiniMax **D Research** expert structure. It turns the MiniMax-style expert and subagent layout into project-local or global OpenCode agents.
 
 This adapter does **not** vendor the full [`d-research-skill`](https://github.com/d-init-d/d-research-skill). It expects [`d-research-skill`](https://github.com/d-init-d/d-research-skill) to be installed in OpenCode already.
 
 ## What This Provides
 
 - A primary OpenCode agent: `d-research`
-- Six hidden OpenCode subagents mapped from the MiniMax expert backup
+- Six hidden OpenCode subagents mapped from the D Research expert roles
 - Strict `permission.task` allowlist so the main agent only sees the D Research workers
 - `permission.skill` allowlist so the agents only load `d-research`
 - Read-only-by-default research permissions
@@ -81,11 +81,11 @@ This is close to a MiniMax expert/subagent setup, but OpenCode users can still e
 - `examples/opencode.json`: equivalent JSON-style config example
 - `docs/install.md`: install notes
 - `docs/permissions.md`: permission rationale
-- `docs/from-minimax-backup.md`: mapping from the MiniMax expert backup
+- `docs/from-minimax-reference.md`: mapping from the MiniMax reference roles
 
 ## Source And Attribution
 
-- Agent prompts are derived from the D Research MiniMax expert backup.
+- Agent prompts are derived from a private D Research MiniMax reference config. The MiniMax prompt and subagent configuration are intentionally not published here.
 - The workflow expects [`d-research-skill`](https://github.com/d-init-d/d-research-skill) from [`d-init-d/d-research-skill`](https://github.com/d-init-d/d-research-skill).
 - MiniMax reference expert: [`D Research`](https://agent.minimax.io/experts?preview_expert_id=400918132543790)
 - Preserve the original skill license and attribution when distributing the skill itself.

@@ -5,12 +5,6 @@ import { fileURLToPath } from "node:url";
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(scriptDir, "..");
 
-const DEFAULT_SOURCE = path.join(
-  repoRoot,
-  "minimax",
-  "backup",
-  "minimax-d-research-expert-config.json",
-);
 const DEFAULT_OUT = path.join(repoRoot, "opencode");
 
 const args = Object.fromEntries(
@@ -20,12 +14,18 @@ const args = Object.fromEntries(
   }),
 );
 
-const sourcePath = path.resolve(args.source || DEFAULT_SOURCE);
+if (!args.source) {
+  throw new Error(
+    "Missing --source=<path-to-private-minimax-reference-config.json>. MiniMax prompt and subagent configuration are intentionally not stored in this repo.",
+  );
+}
+
+const sourcePath = path.resolve(args.source);
 const outDir = path.resolve(args.out || DEFAULT_OUT);
 
 const raw = JSON.parse(fs.readFileSync(sourcePath, "utf8"));
 if (raw.expert?.name !== "D Research") {
-  throw new Error(`Expected D Research backup, got: ${raw.expert?.name || "unknown"}`);
+  throw new Error(`Expected D Research config, got: ${raw.expert?.name || "unknown"}`);
 }
 
 const minimaxPreviewUrl = "https://agent.minimax.io/experts?preview_expert_id=400918132543790";
@@ -117,7 +117,7 @@ function mainAgentMarkdown() {
 
 # D Research OpenCode Agent
 
-You are the OpenCode adapter for the MiniMax **D Research** expert backup.
+You are the OpenCode adapter for the MiniMax **D Research** expert reference.
 
 ## OpenCode Adapter Contract
 
@@ -134,9 +134,9 @@ ${subagentList}
 
 ## Restore Source
 
-- MiniMax backup date: ${raw.backupDate}
+- Private source config date: ${raw.backupDate || "not recorded"}
 - MiniMax expert preview: ${minimaxPreviewUrl}
-- Source snapshot in this repo: \`minimax/backup/minimax-d-research-expert-config.json\`
+- Private MiniMax config source: not published in this repository
 
 ## Original D Research Expert Instructions
 
@@ -170,14 +170,14 @@ function opencodeReadme() {
 
   return `# D Research Adapter For OpenCode
 
-OpenCode agent adapter generated from the MiniMax **D Research** expert backup. It turns the MiniMax-style expert and subagent layout into project-local or global OpenCode agents.
+OpenCode agent adapter derived from the MiniMax **D Research** expert structure. It turns the MiniMax-style expert and subagent layout into project-local or global OpenCode agents.
 
 This adapter does **not** vendor the full [\`d-research-skill\`](${skillUrl}). It expects [\`d-research-skill\`](${skillUrl}) to be installed in OpenCode already.
 
 ## What This Provides
 
 - A primary OpenCode agent: \`d-research\`
-- Six hidden OpenCode subagents mapped from the MiniMax expert backup
+- Six hidden OpenCode subagents mapped from the D Research expert roles
 - Strict \`permission.task\` allowlist so the main agent only sees the D Research workers
 - \`permission.skill\` allowlist so the agents only load \`d-research\`
 - Read-only-by-default research permissions
@@ -246,11 +246,11 @@ This is close to a MiniMax expert/subagent setup, but OpenCode users can still e
 - \`examples/opencode.json\`: equivalent JSON-style config example
 - \`docs/install.md\`: install notes
 - \`docs/permissions.md\`: permission rationale
-- \`docs/from-minimax-backup.md\`: mapping from the MiniMax expert backup
+- \`docs/from-minimax-reference.md\`: mapping from the MiniMax reference roles
 
 ## Source And Attribution
 
-- Agent prompts are derived from the D Research MiniMax expert backup.
+- Agent prompts are derived from a private D Research MiniMax reference config. The MiniMax prompt and subagent configuration are intentionally not published here.
 - The workflow expects [\`d-research-skill\`](${skillUrl}) from [\`d-init-d/d-research-skill\`](${skillUrl}).
 - MiniMax reference expert: [\`D Research\`](${minimaxPreviewUrl})
 - Preserve the original skill license and attribution when distributing the skill itself.
@@ -347,31 +347,27 @@ OpenCode config is local and editable by the user. \`permission.task\` controls 
 }
 
 function minimaxDoc() {
-  return `# From MiniMax Backup
+  return `# From MiniMax Reference
 
-This adapter was generated from the sanitized MiniMax D Research backup snapshot stored in this repo:
-
-\`\`\`text
-minimax/backup/minimax-d-research-expert-config.json
-\`\`\`
-
-The live MiniMax expert reference is:
+This adapter mirrors the role structure of the public MiniMax D Research expert:
 
 \`\`\`text
 ${minimaxPreviewUrl}
 \`\`\`
 
+The MiniMax expert prompt and subagent configuration are intentionally not published in this repository.
+
 ## Mapping
 
-| MiniMax role | OpenCode id |
+| MiniMax reference role | OpenCode id |
 | --- | --- |
 | D Research Expert | \`d-research\` |
 ${orderedSubagents.map((subagent) => `| ${subagent.name} | \`${subagent.id}\` |`).join("\n")}
 
 ## Conversion Rules
 
-- Main expert instructions become the body of \`opencode/.opencode/agents/d-research.md\`.
-- Each MiniMax subagent prompt becomes one hidden OpenCode subagent.
+- Main expert behavior becomes the body of \`opencode/.opencode/agents/d-research.md\`.
+- Each MiniMax-style role becomes one hidden OpenCode subagent.
 - MiniMax subagent attachment becomes OpenCode \`permission.task\` allowlisting.
 - MiniMax skill dependency becomes OpenCode \`permission.skill\` allowlisting.
 - MiniMax read-only/safety posture becomes \`edit: deny\` and \`bash: ask\`.
@@ -454,7 +450,7 @@ for (const subagent of orderedSubagents) {
 write(path.join(outDir, "README.md"), opencodeReadme());
 write(path.join(outDir, "docs/install.md"), installDoc());
 write(path.join(outDir, "docs/permissions.md"), permissionsDoc());
-write(path.join(outDir, "docs/from-minimax-backup.md"), minimaxDoc());
+write(path.join(outDir, "docs/from-minimax-reference.md"), minimaxDoc());
 write(path.join(outDir, "examples/opencode.json"), exampleConfig());
 
 console.log(

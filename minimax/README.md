@@ -8,13 +8,9 @@ Open the current MiniMax expert preview:
 
 [`D Research` on MiniMax Agent](https://agent.minimax.io/experts?preview_expert_id=400918132543790)
 
-## Backup Snapshot
+## Configuration Privacy
 
-The backup snapshot used to generate the first OpenCode adapter is stored at:
-
-[`backup/minimax-d-research-expert-config.json`](backup/minimax-d-research-expert-config.json)
-
-The snapshot is included for auditability and reproducibility. It contains the expert prompt and subagent prompts, but it does not include secrets, API keys, or environment variables.
+The MiniMax expert prompt and subagent configuration are intentionally not published in this repository. This folder only keeps the public preview link.
 
 ## Role Mapping
 

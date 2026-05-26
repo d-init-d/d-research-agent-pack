@@ -1,20 +1,16 @@
-# From MiniMax Backup
+# From MiniMax Reference
 
-This adapter was generated from the sanitized MiniMax D Research backup snapshot stored in this repo:
-
-```text
-minimax/backup/minimax-d-research-expert-config.json
-```
-
-The live MiniMax expert reference is:
+This adapter mirrors the role structure of the public MiniMax D Research expert:
 
 ```text
 https://agent.minimax.io/experts?preview_expert_id=400918132543790
 ```
 
+The MiniMax expert prompt and subagent configuration are intentionally not published in this repository.
+
 ## Mapping
 
-| MiniMax role | OpenCode id |
+| MiniMax reference role | OpenCode id |
 | --- | --- |
 | D Research Expert | `d-research` |
 | Source Mapper | `d-research-source-mapper` |
@@ -26,8 +22,8 @@ https://agent.minimax.io/experts?preview_expert_id=400918132543790
 
 ## Conversion Rules
 
-- Main expert instructions become the body of `opencode/.opencode/agents/d-research.md`.
-- Each MiniMax subagent prompt becomes one hidden OpenCode subagent.
+- Main expert behavior becomes the body of `opencode/.opencode/agents/d-research.md`.
+- Each MiniMax-style role becomes one hidden OpenCode subagent.
 - MiniMax subagent attachment becomes OpenCode `permission.task` allowlisting.
 - MiniMax skill dependency becomes OpenCode `permission.skill` allowlisting.
 - MiniMax read-only/safety posture becomes `edit: deny` and `bash: ask`.

@@ -13,7 +13,7 @@ This repository is the **agent adapter layer** for D Research. It does not vendo
 - source-recall checklists
 - evidence verification gates
 - read-only research defaults
-- restorable config snapshots
+- restorable platform configs
 
 The goal is to make a MiniMax-style D Research expert available across multiple agent runtimes.
 
@@ -21,7 +21,7 @@ The goal is to make a MiniMax-style D Research expert available across multiple 
 
 | Platform | Status | Path | Notes |
 | --- | --- | --- | --- |
-| MiniMax Agent | Live reference | [`minimax/`](minimax/) | Public expert preview and source backup snapshot |
+| MiniMax Agent | Live reference | [`minimax/`](minimax/) | Public expert preview only |
 | OpenCode | Ready | [`opencode/`](opencode/) | Primary agent plus six hidden subagents |
 | Claude Code | Planned | [`claude-code/`](claude-code/) | Placeholder for a future adapter |
 
@@ -30,10 +30,6 @@ The goal is to make a MiniMax-style D Research expert available across multiple 
 The current MiniMax D Research expert is available here:
 
 [`D Research` on MiniMax Agent](https://agent.minimax.io/experts?preview_expert_id=400918132543790)
-
-The MiniMax configuration snapshot used to generate the first OpenCode adapter is stored at:
-
-[`minimax/backup/minimax-d-research-expert-config.json`](minimax/backup/minimax-d-research-expert-config.json)
 
 ## Current OpenCode Pack
 
@@ -56,8 +52,6 @@ d-research-agent-pack/
   README.md
   minimax/
     README.md
-    backup/
-      minimax-d-research-expert-config.json
   opencode/
     README.md
     .opencode/
@@ -67,7 +61,7 @@ d-research-agent-pack/
   claude-code/
     README.md
   scripts/
-    generate-opencode-from-minimax-backup.mjs
+    generate-opencode-adapter.mjs
 ```
 
 ## Design Principles
@@ -82,4 +76,4 @@ d-research-agent-pack/
 
 - Skill dependency: [`d-init-d/d-research-skill`](https://github.com/d-init-d/d-research-skill)
 - MiniMax expert reference: [`D Research`](https://agent.minimax.io/experts?preview_expert_id=400918132543790)
-- OpenCode adapter prompts are derived from the D Research MiniMax expert backup stored in this repository.
+- OpenCode adapter prompts are derived from a private D Research MiniMax reference config. The MiniMax prompt and subagent configuration are intentionally not published here.
